@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sentinel-config
+  labels:
+    app: sentinel-ops
+    student: "1MS24CI026"
+data:
+  APP_ENV: "production"
+  SERVER_PORT: "8088"
+  DEFAULT_REGION: "ap-south-1"
+  CLUSTER_NAME: "sentinel-k8s"
+  COURSE_CODE: "24CIAEC59"
