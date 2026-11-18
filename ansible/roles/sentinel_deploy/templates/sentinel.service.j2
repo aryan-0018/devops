@@ -1,0 +1,19 @@
+[Unit]
+Description=SentinelOps AI Anomaly & Telemetry Engine (Student: {{ student_usn }})
+After=network.target
+
+[Service]
+Type=simple
+User=sentineluser
+Group=appgroup
+WorkingDirectory={{ deploy_dir }}
+ExecStart=/usr/bin/java -Xms128m -Xmx512m -jar {{ deploy_dir }}/{{ app_name }}.jar
+Restart=always
+RestartSec=10
+Environment=SERVER_PORT={{ service_port }}
+Environment=STUDENT_USN={{ student_usn }}
+Environment=STUDENT_NAME="{{ student_name }}"
+Environment=COURSE_CODE={{ course_code }}
+
+[Install]
+WantedBy=multi-user.target

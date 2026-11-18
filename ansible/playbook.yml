@@ -1,0 +1,21 @@
+---
+- name: Configure Application Server and Deploy SentinelOps AI
+  hosts: appservers
+  become: yes
+  vars:
+    app_name: sentinel-ops
+    service_port: 8088
+    student_name: "Aryan M Desai"
+    student_usn: "1MS24CI026"
+    course_code: "24CIAEC59"
+    deploy_dir: /opt/sentinel
+    jar_source: ../target/sentinel-aiops-1.0.0.jar
+  roles:
+    - sentinel_deploy
+  handlers:
+    - name: restart sentinel
+      systemd:
+        name: "{{ app_name }}"
+        state: restarted
+        daemon_reload: yes
+        enabled: yes

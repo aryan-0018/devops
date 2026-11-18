@@ -1,0 +1,67 @@
+---
+- name: Ensure Java 17 JRE package is installed
+  apt:
+    name: openjdk-17-jre-headless
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Create dedicated unprivileged service group
+  group:
+    name: appgroup
+    state: present
+
+- name: Create dedicated unprivileged service user
+  user:
+    name: sentineluser
+    group: appgroup
+    shell: /bin/false
+    system: yes
+    create_home: no
+
+- name: Create application deployment directory
+  file:
+    path: "{{ deploy_dir }}"
+    state: directory
+    owner: sentineluser
+    group: appgroup
+    mode: '0755'
+
+- name: Deploy SentinelOps AI production JAR
+  copy:
+    src: "{{ jar_source }}"
+    dest: "{{ deploy_dir }}/{{ app_name }}.jar"
+    owner: sentineluser
+    group: appgroup
+    mode: '0644'
+  notify: restart sentinel
+
+- name: Deploy systemd service unit from template
+  template:
+    src: sentinel.service.j2
+    dest: "/etc/systemd/system/{{ app_name }}.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart sentinel
+
+- name: Ensure SentinelOps AI service is active and enabled
+  systemd:
+    name: "{{ app_name }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: Verify SentinelOps AI health endpoint responsiveness
+  uri:
+    url: "http://localhost:{{ service_port }}/health"
+    method: GET
+    status_code: 200
+  register: health_check
+  retries: 5
+  delay: 3
+  until: health_check.status == 200
+
+- name: Log deployment status and student verification
+  debug:
+    msg: "SentinelOps AI successfully deployed for {{ student_name }} ({{ student_usn }}) on port {{ service_port }}."

@@ -1,0 +1,7 @@
+---
+- name: restart sentinel
+  systemd:
+    name: "{{ app_name }}"
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
