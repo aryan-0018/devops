@@ -10,5 +10,15 @@ docx_extracted.txt
 main.pdf
 CI_devops_report.docx
 CI_devops_report.pdf
+CI_devops_report_1MS24CI026.html
 word/
 image1.jpeg
+joel_images/
+inspect_images.py
+generate_screenshots.py
+build_docx_report.py
+build_full_report.py
+verify_pdf_pages.py
+sentinel_server.py
+kind.exe
+*.py
