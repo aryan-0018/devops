@@ -1,0 +1,14 @@
+target/
+*.log
+*.tmp
+.idea/
+*.iml
+.vscode/
+bin/
+main_extracted.txt
+docx_extracted.txt
+main.pdf
+CI_devops_report.docx
+CI_devops_report.pdf
+word/
+image1.jpeg
