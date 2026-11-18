@@ -1,0 +1,42 @@
+name: SentinelOps CI
+
+on:
+  push:
+    branches: [ "main", "sentinel" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build & Test (Java 17)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Compile and Run Unit Tests
+        run: mvn -B test
+
+      - name: Package JAR Artifact
+        run: mvn -B package -DskipTests
+
+      - name: Archive Surefire Test Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: surefire-test-reports
+          path: target/surefire-reports/*.xml
+
+      - name: Archive Production JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-aiops-jar
+          path: target/*.jar
